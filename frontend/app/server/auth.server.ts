@@ -8,19 +8,20 @@ const authenticatedUserSchema = z.object({
 });
 
 export const getOptionalUser = async ({context}: {context: AppLoadContext}) => {
-  return authenticatedUserSchema.optional().nullable().parse(context.User);
-  if (User) {
-    return await context.remixService.getUser({
-      userId: user.id
-    })
+  const user = authenticatedUserSchema.safeParse(context.User); // Utilise `safeParse` pour une validation plus flexible
+  if (!user.success || !user.data) {
+    return null;
   }
-  return null;
+
+  return await context.remixService.getUser({
+    userId: user.data.id, // Utilise `user.data.id` car `safeParse` retourne un résultat structuré
+  });
 }
 
 export const reqireUser = async ({context}: {context: AppLoadContext}) => {
   const user = await getOptionalUser({context});
   if (!user) {
-    throw redirect('/login');
+    throw redirect('/login'); // Redirection vers /login si aucun utilisateur trouvé
   }
   return user;
 }

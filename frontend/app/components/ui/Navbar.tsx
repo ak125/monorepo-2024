@@ -13,6 +13,9 @@ export const Navbar = ({ logo }: { logo: string }) => {
                 {user ? (
                     <>
                         <span className='text-xs'>{user.name}</span>
+                      <Link to='/'>
+                        <ReceiptEuro className='flex-shrink-0' />
+                      </Link>
                         <Link className='text-xs' to='/transactions'>
                             Demandes
                         </Link>

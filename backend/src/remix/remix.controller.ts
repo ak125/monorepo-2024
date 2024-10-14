@@ -1,8 +1,8 @@
-import { getServerBuild } from '@fafa/frontend';
 import { All, Controller, Next, Req, Res } from '@nestjs/common';
 import { createRequestHandler } from '@remix-run/express';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { RemixService } from './remix.service';
+import { getServerBuild } from '@fafa/frontend';
 
 @Controller()
 export class RemixController {
@@ -14,15 +14,26 @@ export class RemixController {
     @Res() response: Response,
     @Next() next: NextFunction,
   ) {
-    // Ensure getServerBuild is properly awaited and its return type is handled
-    const build = await getServerBuild() as any; // Cast to 'any' or the appropriate type
+    try {
+      // Récupère le build Remix pour le mode développement
+      const build = await getServerBuild();
 
-    return createRequestHandler({
-      build: build, // Make sure build is correctly assigned
-      getLoadContext: () => ({
-        user: request.user,       // Ensure there's no duplicate
-        remixService: this.remixService, // Ensure there's no duplicate
-      }),
-    })(request, response, next);
+      // Assurez-vous que le build a bien été chargé
+      if (!build) {
+        throw new Error('Failed to load Remix build');
+      }
+
+      // Crée un handler pour gérer les requêtes Remix
+      return createRequestHandler({
+        build, // Utilisation du build récupéré
+        getLoadContext: () => ({
+          user: request.user,       // Ajoutez votre logique utilisateur
+          remixService: this.remixService, // Ajout du service Remix
+        }),
+      })(request, response, next);
+    } catch (error) {
+      console.error('Error in RemixController:', error);
+      response.status(500).send('Internal Server Error');
+    }
   }
 }

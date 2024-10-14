@@ -15,7 +15,7 @@ export default function Login() {
       <form method="post" action="/auth/login" className="flex flex-col gap-2">
         <Input type="email" name="email" placeholder="Email" required /> {/* Utilisation du composant Input */}
         <Input type="password" name="password" placeholder="Mot de passe" required />
-        <Button className='ml-auto' type='submit'>Connexion</Button> {/* Utilisation du composant Button */}
+        <Button className='ml-auto' type='submit'>Connexion</Button> {/* Utilisation du composant Button22 */}
       </form>
     </div>
   );

@@ -1,5 +1,4 @@
-declare module "*.css?url" {
+declare module "*.css" {
   const content: string;
   export default content;
 }
-

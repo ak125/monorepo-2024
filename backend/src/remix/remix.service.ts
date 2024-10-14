@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prismaservices';
+import { PrismaServices } from '../prisma/prisma.services';
 
 @Injectable()
 export class RemixService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaServices) {}
 
   // Correction de la méthode getHello
   public readonly getHello = (): string => {
